@@ -5,15 +5,15 @@ export default function HomeScreen() {
   const router = useRouter();
 
   function openCamera() {
-    router.push("/CameraScreen");
+    router.push("/camera");
   }
 
   function openPreview() {
-    router.push("/PreviewScreen");
+    router.push("/preview");
   }
 
   function openResult() {
-    router.push("/ResultScreen");
+    router.push("/result");
   }
 
   return (
