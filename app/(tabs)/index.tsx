@@ -1,98 +1,164 @@
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { useRouter } from "expo-router";
+import { MaterialIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { useState } from "react";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function HomeScreen() {
-  const router = useRouter();
+  const [task, setTask] = useState("");
 
-  function openCamera() {
-    router.push("/camera");
+  const [tasks, setTasks] = useState<any[]>([]);
+
+  function addTask() {
+    if (!task.trim()) return;
+
+    const newTask = {
+      id: Date.now().toString(),
+      title: task,
+      completed: false,
+    };
+
+    setTasks((prev) => [newTask, ...prev]);
+    setTask("");
   }
 
-  function openPreview() {
-    router.push("/preview");
+  function toggleTask(id: string) {
+    setTasks((prev) =>
+      prev.map((t) =>
+        t.id === id ? { ...t, completed: !t.completed } : t
+      )
+    );
   }
 
-  function openResult() {
-    router.push("/result");
+  function deleteTask(id: string) {
+    setTasks((prev) => prev.filter((t) => t.id !== id));
   }
 
   return (
     <View style={styles.container}>
 
-      <Text style={styles.title}>VisionAI</Text>
-
-      {/* CAMERA */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={openCamera}
+      {/* CAMERA BUTTON */}
+      <Pressable
+        style={styles.cameraButton}
+        onPress={() => router.push("/camera")}
       >
-        <Text style={styles.buttonText}>
-          Open Camera
+        <Text style={styles.cameraButtonText}>
+          Open VisionAI Camera
         </Text>
-      </TouchableOpacity>
+      </Pressable>
 
-      {/* PREVIEW */}
-      <TouchableOpacity
-        style={styles.buttonSecondary}
-        onPress={openPreview}
-      >
-        <Text style={styles.buttonText}>
-          Go to Preview
-        </Text>
-      </TouchableOpacity>
+      <Text style={styles.title}>VisionAI Tasks</Text>
 
-      {/* RESULT */}
-      <TouchableOpacity
-        style={styles.buttonSecondary}
-        onPress={openResult}
-      >
-        <Text style={styles.buttonText}>
-          Go to Result
-        </Text>
-      </TouchableOpacity>
+      {/* INPUT */}
+      <View style={styles.inputRow}>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter Task"
+          value={task}
+          onChangeText={setTask}
+        />
+
+        <TouchableOpacity style={styles.addButton} onPress={addTask}>
+          <MaterialIcons name="add" size={22} color="#fff" />
+        </TouchableOpacity>
+      </View>
+
+      {/* TASK LIST */}
+      {tasks.map((item) => (
+        <View key={item.id} style={styles.taskRow}>
+
+          <TouchableOpacity onPress={() => toggleTask(item.id)}>
+            <MaterialIcons
+              name={
+                item.completed
+                  ? "check-box"
+                  : "check-box-outline-blank"
+              }
+              size={22}
+              color={item.completed ? "#2E5BBA" : "#5A6472"}
+            />
+          </TouchableOpacity>
+
+          <Text
+            style={[
+              styles.taskText,
+              item.completed && { textDecorationLine: "line-through" },
+            ]}
+          >
+            {item.title}
+          </Text>
+
+          <TouchableOpacity onPress={() => deleteTask(item.id)}>
+            <MaterialIcons name="delete" size={20} color="#E74C3C" />
+          </TouchableOpacity>
+
+        </View>
+      ))}
 
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#000",
-    gap: 12,
+    padding: 20,
+    backgroundColor: "#fff",
   },
 
   title: {
     fontSize: 28,
     fontWeight: "bold",
-    color: "#fff",
+    marginTop: 40,
+  },
+
+  cameraButton: {
+    backgroundColor: "#5B3FA3",
+    padding: 14,
+    borderRadius: 10,
     marginBottom: 20,
-  },
-
-  button: {
-    backgroundColor: "#2E5BBA",
-    paddingVertical: 14,
-    paddingHorizontal: 25,
-    borderRadius: 10,
-    width: 200,
     alignItems: "center",
   },
 
-  buttonSecondary: {
-    backgroundColor: "#444",
-    paddingVertical: 14,
-    paddingHorizontal: 25,
-    borderRadius: 10,
-    width: 200,
-    alignItems: "center",
-  },
-
-  buttonText: {
+  cameraButtonText: {
     color: "#fff",
     fontWeight: "bold",
   },
 
+  inputRow: {
+    flexDirection: "row",
+    marginVertical: 20,
+  },
+
+  input: {
+    flex: 1,
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 8,
+  },
+
+  addButton: {
+    backgroundColor: "#2E5BBA",
+    padding: 10,
+    marginLeft: 10,
+    borderRadius: 8,
+  },
+
+  taskRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    paddingVertical: 10,
+  },
+
+  taskText: {
+    flex: 1,
+    fontSize: 16,
+  },
 });
