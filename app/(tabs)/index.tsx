@@ -8,37 +8,91 @@ export default function HomeScreen() {
     router.push("/CameraScreen");
   }
 
+  function openPreview() {
+    router.push("/PreviewScreen");
+  }
+
+  function openResult() {
+    router.push("/ResultScreen");
+  }
+
   return (
     <View style={styles.container}>
+
       <Text style={styles.title}>VisionAI</Text>
 
-      <TouchableOpacity style={styles.button} onPress={openCamera}>
-        <Text style={styles.buttonText}>Open Camera</Text>
+      {/* CAMERA */}
+      <TouchableOpacity
+        style={styles.button}
+        onPress={openCamera}
+      >
+        <Text style={styles.buttonText}>
+          Open Camera
+        </Text>
       </TouchableOpacity>
+
+      {/* PREVIEW */}
+      <TouchableOpacity
+        style={styles.buttonSecondary}
+        onPress={openPreview}
+      >
+        <Text style={styles.buttonText}>
+          Go to Preview
+        </Text>
+      </TouchableOpacity>
+
+      {/* RESULT */}
+      <TouchableOpacity
+        style={styles.buttonSecondary}
+        onPress={openResult}
+      >
+        <Text style={styles.buttonText}>
+          Go to Result
+        </Text>
+      </TouchableOpacity>
+
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#000",
+    gap: 12,
   },
+
   title: {
     fontSize: 28,
-    color: "white",
     fontWeight: "bold",
+    color: "#fff",
     marginBottom: 20,
   },
+
   button: {
     backgroundColor: "#2E5BBA",
-    padding: 14,
+    paddingVertical: 14,
+    paddingHorizontal: 25,
     borderRadius: 10,
+    width: 200,
+    alignItems: "center",
   },
+
+  buttonSecondary: {
+    backgroundColor: "#444",
+    paddingVertical: 14,
+    paddingHorizontal: 25,
+    borderRadius: 10,
+    width: 200,
+    alignItems: "center",
+  },
+
   buttonText: {
-    color: "white",
+    color: "#fff",
     fontWeight: "bold",
   },
+
 });
